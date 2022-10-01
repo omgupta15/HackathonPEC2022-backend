@@ -4,6 +4,8 @@ const config = require("server-config");
 module.exports = async (req, res) => {
   let { name, userType } = req.body;
 
+  console.log(req.body);
+
   if (req.user.name)
     return res
       .status(400)
