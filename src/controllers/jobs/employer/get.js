@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
 
   const appliedWorkers = await Application.find({
     job: mongoose.Types.ObjectId(jobId),
-  }).populate("user");
+  }).populate("worker");
 
   const jobDetails = {
     jobId: job._id,
