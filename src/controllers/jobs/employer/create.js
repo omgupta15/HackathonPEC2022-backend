@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
 
   let validationResponse;
   try {
-    validationResponse = await schema.validateAsync(formData);
+    validationResponse = schema.validate(formData);
   } catch (validationError) {
     console.log(
       "[jobs/employer/create]",
