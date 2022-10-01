@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
     jobTitle: job.jobTitle,
     description: job.description,
 
-    appliedWorkersCount: job.appliedWorkers.length,
+    appliedWorkersCount: job.appliedWorkersCount,
     totalWorkersRequired: job.totalWorkersRequired,
 
     location: job.location,
