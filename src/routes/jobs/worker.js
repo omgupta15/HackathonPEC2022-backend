@@ -10,5 +10,6 @@ router.use(checkUserType("worker"));
 router.get("/list", controller.list);
 router.get("/:jobId/get", controller.get);
 router.post("/apply", controller.apply);
+router.post("/search", controller.search);
 
 module.exports = router;

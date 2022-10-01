@@ -1,17 +1,17 @@
-// Get List of Jobs created by Employer
-
 const Job = require("models/Job");
-const mongoose = require("mongoose");
 
 module.exports = async (req, res) => {
-  const jobs = await Job.find({
-    employer: mongoose.Types.ObjectId(req.user._id),
+  const { searchTerm } = req.body;
+
+  const searchResult = await Job.find({
+    $or: [
+      { jobTitle: { $search: searchTerm, $caseSensitive: false } },
+      { workerTagRequired: { $search: searchTerm, $caseSensitive: false } },
+    ],
   });
 
   const jobsList = [];
-  for (let job of jobs) {
-    if (job.totalWorkersRequired <= job.appliedWorkers.length) continue;
-
+  for (let job of searchResult) {
     jobsList.push({
       jobTitle: job.jobTitle,
 

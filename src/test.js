@@ -33,3 +33,5 @@ const createIdTokenfromCustomToken = async (uid) => {
 createIdTokenfromCustomToken("u03MUH9pv0Rnb7w0mJ7DeXMICBb2")
   .then((response) => console.log(response))
   .catch((err) => console.log("Error:", err));
+
+// console.log(JSON.stringify(require("./keys/firebase.json")));

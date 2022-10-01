@@ -21,6 +21,9 @@ module.exports = async (req, res) => {
   if (hasAppliedAlready)
     return res.status(400).json({ success: false, error: "already-applied" });
 
+  if (job.appliedWorkers.length >= job.totalWorkersRequired)
+    return res.status(400).json({ success: false, error: "job-already-full" });
+
   const applicationTime = new Date();
 
   req.user.jobsApplied.push({
@@ -35,6 +38,10 @@ module.exports = async (req, res) => {
     appliedAt: applicationTime,
   });
   await job.save();
+
+  if (job.appliedWorkers.length >= job.totalWorkersRequired) {
+    // Job Full. Mark as accepted.
+  }
 
   return res.json({ success: true });
 };

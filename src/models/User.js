@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema(
       {
         job: { type: mongoose.Schema.Types.ObjectId, ref: "Job" },
         appliedAt: Date,
-        accepted: Boolean,
       },
     ],
 
