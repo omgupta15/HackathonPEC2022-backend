@@ -3,8 +3,8 @@ const Job = require("models/Job");
 const config = require("server-config");
 
 const schema = Joi.object({
-  jobTitle: Joi.string().min(10).max(50).required(),
-  description: Joi.string().min(100).max(5000).required(),
+  jobTitle: Joi.string().min(1).max(50).required(),
+  description: Joi.string().min(1).max(5000).required(),
 
   totalWorkersRequired: Joi.number().integer().min(1).max(10000).required(),
 
