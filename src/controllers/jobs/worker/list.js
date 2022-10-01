@@ -24,15 +24,17 @@ module.exports = async (req, res) => {
   }
 
   let jobs;
-  if (filter === "all") jobs = await Job.find();
+  if (filter === "all") jobs = await Job.find().sort({ createdAt: -1 });
   else if (filter === "my-tag")
-    jobs = await Job.find({
-      workerTagRequired: req.user.workerTag,
+    jobs = await Job.find({ workerTagRequired: req.user.workerTag }).sort({
+      createdAt: -1,
     });
   else if (filter === "applied") {
     const applications = await Application.find({
       worker: mongoose.Types.ObjectId(req.user._id),
-    }).populate("job");
+    })
+      .populate("job")
+      .sort({ createdAt: -1 });
     jobs = applications.map((application) => application.job);
   } else if (filter === "search") {
     jobs = await Job.find({
@@ -40,7 +42,7 @@ module.exports = async (req, res) => {
         { jobTitle: { $match: new RegExp(searchTerm, "i") } },
         { workerTagRequired: { $match: new RegExp(searchTerm, "i") } },
       ],
-    });
+    }).sort({ createdAt: -1 });
   }
 
   const jobsList = [];
@@ -73,8 +75,12 @@ module.exports = async (req, res) => {
       workerTagRequired: job.workerTagRequired,
 
       appliedWorkers: [],
+
+      createdAt: job.createdAt,
     });
   }
+
+  jobsList.sort((job) => job.createdAt);
 
   return res.json({ success: true, jobs: jobsList });
 };

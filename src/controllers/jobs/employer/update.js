@@ -19,7 +19,7 @@ const schema = Joi.object({
   // openingExpiresOn: Joi.date().greater("now").required(),
 
   startsOn: Joi.date().required(),
-  endsOn: Joi.date().greater(Joi.ref("startsOn")).required(),
+  endsOn: Joi.date().required(),
 
   workerTagRequired: Joi.string()
     .valid(...config.WORKER_TAGS)

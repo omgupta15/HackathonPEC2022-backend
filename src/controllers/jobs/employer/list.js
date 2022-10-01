@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 module.exports = async (req, res) => {
   const jobs = await Job.find({
     employer: mongoose.Types.ObjectId(req.user._id),
-  });
+  }).sort({ createdAt: -1 });
 
   const jobsList = [];
   for (let job of jobs) {
