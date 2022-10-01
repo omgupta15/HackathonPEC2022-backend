@@ -3,6 +3,7 @@ const config = require("server-config");
 
 module.exports = async (req, res) => {
   let { name, userType } = req.body;
+  userType = userType?.toLowerCase();
 
   console.log(req.body);
 
@@ -20,8 +21,9 @@ module.exports = async (req, res) => {
 
   name = name.slice(0, 50);
 
-  if (userType === "Worker") {
+  if (userType === "worker") {
     const { workerTag } = req.body;
+
     if (!config.WORKER_TAGS.includes(workerTag))
       return res
         .status(400)
