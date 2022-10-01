@@ -37,8 +37,8 @@ module.exports = async (req, res) => {
   } else if (filter === "search") {
     jobs = await Job.find({
       $or: [
-        { jobTitle: { $search: searchTerm, $caseSensitive: false } },
-        { workerTagRequired: { $search: searchTerm, $caseSensitive: false } },
+        { jobTitle: { $match: new RegExp(searchTerm, "i") } },
+        { workerTagRequired: { $match: new RegExp(searchTerm, "i") } },
       ],
     });
   }
