@@ -1,8 +1,11 @@
 // Get a job with a specific Job Id.
 // TODO: Add check for workerTag match.
 
-const Job = require("models/Job");
 const mongoose = require("mongoose");
+
+// Models
+const Job = require("models/Job");
+const Application = require("models/Application");
 
 module.exports = async (req, res) => {
   const { jobId } = req.params;
