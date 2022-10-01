@@ -51,7 +51,13 @@ module.exports = async (req, res) => {
     return res.status(400).json({ success: true, error: "invalid-data" });
   }
 
-  if (validationResponse.error || !validationResponse.value) {
+  console.log("validationResponse:", validationResponse);
+
+  if (
+    !validationResponse ||
+    validationResponse.error ||
+    !validationResponse.value
+  ) {
     console.log(
       "[jobs/employer/create]",
       "formData validation error:",

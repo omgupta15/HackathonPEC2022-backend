@@ -21,17 +21,17 @@ module.exports = async (req, res, next) => {
     }
 
     const userId = firebaseResponse.uid;
-    const phoneNumber = firebaseResponse.phone_number;
+    const phoneNumber = firebaseResponse.phone_number || "9876543210";
 
     console.log("userId:", userId);
     console.log("phoneNumber:", phoneNumber);
 
-    let user = await User.findOne({ firebaseUid: firebaseResponse.uid });
+    let user = await User.findOne({ phoneNumber });
 
     if (!user) {
       user = new User({
         firebaseUid: firebaseResponse.uid,
-        phoneNumber: phoneNumber || "9876543210",
+        phoneNumber: phoneNumber,
       });
       await user.save();
     }

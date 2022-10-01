@@ -30,7 +30,7 @@ const createIdTokenfromCustomToken = async (uid) => {
   }
 };
 
-createIdTokenfromCustomToken("u03MUH9pv0Rnb7w0mJ7DeXMICBb2")
+createIdTokenfromCustomToken("sBy8W1AeVEQ1YYIVzbKtuQN0Gro1")
   .then((response) => console.log(response))
   .catch((err) => console.log("Error:", err));
 
