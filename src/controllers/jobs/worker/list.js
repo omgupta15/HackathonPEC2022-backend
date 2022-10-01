@@ -79,7 +79,7 @@ module.exports = async (req, res) => {
 
       workerTagRequired: job.workerTagRequired,
 
-      applied,
+      applied: Boolean(applied),
 
       createdAt: job.createdAt,
     });
