@@ -53,6 +53,11 @@ module.exports = async (req, res) => {
     )
       continue;
 
+    const applied = await Application.exists({
+      job: mongoose.Types.ObjectId(job._id),
+      worker: mongoose.Types.ObjectId(req.user._id),
+    });
+
     jobsList.push({
       jobId: job._id,
 
@@ -74,7 +79,7 @@ module.exports = async (req, res) => {
 
       workerTagRequired: job.workerTagRequired,
 
-      appliedWorkers: [],
+      applied,
 
       createdAt: job.createdAt,
     });
