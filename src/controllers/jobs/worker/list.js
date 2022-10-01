@@ -7,7 +7,7 @@ const Application = require("models/Application");
 const Job = require("models/Job");
 
 module.exports = async (req, res) => {
-  const { filter, searchTerm } = req.query;
+  let { filter, searchTerm } = req.query;
 
   if (!filter) filter = "all";
 
