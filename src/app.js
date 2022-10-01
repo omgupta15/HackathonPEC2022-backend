@@ -27,7 +27,7 @@ app.use(cookieParser());
 // Routes
 app.use("/", require("routes"));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
   if (err) {
     console.log("Error while starting express server:", err);

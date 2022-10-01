@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
-const config = require("server-config");
 
-const mongoUri = `mongodb://localhost:27017/${config.DATABASE_NAME}`;
-mongoose.connect(mongoUri);
+mongoose.connect(process.env.MONGODB_URL);
 
 const db = mongoose.connection;
 
