@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
 const Joi = require("joi");
-const Job = require("models/Job");
+
 const config = require("server-config");
+
+const Job = require("models/Job");
 
 const schema = Joi.object({
   jobTitle: Joi.string().min(1).max(50).required(),
