@@ -24,7 +24,18 @@ const schema = Joi.object({
 });
 
 module.exports = async (req, res) => {
-  const { formData } = req.body;
+  const { jobId, formData } = req.body;
+
+  if (!jobId)
+    return res.status(404).json({ success: false, error: "invalid-job-id" });
+
+  const job = await Job.findOne({
+    _id: mongoose.Types.ObjectId(jobId),
+    employer: mongoose.Types.ObjectId(req.user._id),
+  });
+
+  if (!job)
+    return res.status(404).json({ success: false, error: "invalid-job-id" });
 
   let validationResponse;
   try {
@@ -47,11 +58,30 @@ module.exports = async (req, res) => {
     return res.status(400).json({ success: true, error: "invalid-data" });
   }
 
-  const newJob = new Job({
-    ...validationResponse.value,
-    employer: req.user._id,
-  });
-  await newJob.save();
+  const updatedData = validationResponse.value;
 
-  return res.json({ success: true, job: { id: newJob._id } });
+  job.jobTitle = updatedData.jobTitle;
+  job.description = updatedData.description;
+  job.totalWorkersRequired = updatedData.totalWorkersRequired;
+  job.location = updatedData.location;
+  job.payPerHour = updatedData.payPerHour;
+  job.hoursPerDay = updatedData.hoursPerDay;
+  // job.openingExpiresOn = updatedData.openingExpiresOn;
+  job.startsOn = updatedData.startsOn;
+  job.endsOn = updatedData.endsOn;
+  job.workerTagRequired = updatedData.workerTagRequired;
+
+  if (job.appliedWorkers.length >= job.totalWorkersRequired) {
+    // const workersToRemove = job.appliedWorkers.slice(job.totalWorkersRequired);
+
+    // workersToRemove.populate();
+    // for (let worker of workersToRemove) {
+    // }
+
+    job.appliedWorkers = job.appliedWorkers.slice(0, job.totalWorkersRequired);
+  }
+
+  await job.save();
+
+  return res.json({ success: true });
 };

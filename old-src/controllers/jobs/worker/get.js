@@ -15,14 +15,11 @@ module.exports = async (req, res) => {
   if (!job)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
 
-  const hasApplied = await Application.exists({
+  const hasApplied = req.user.jobsApplied.exists({
     job: mongoose.Types.ObjectId(jobId),
-    worker: mongoose.Types.ObjectId(req.user._id),
   });
 
   const jobDetails = {
-    jobId: job._id,
-
     jobTitle: job.jobTitle,
     description: job.description,
 

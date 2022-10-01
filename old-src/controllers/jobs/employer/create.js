@@ -49,7 +49,10 @@ module.exports = async (req, res) => {
 
   const newJob = new Job({
     ...validationResponse.value,
+
     employer: req.user._id,
+
+    appliedWorkers: [],
   });
   await newJob.save();
 

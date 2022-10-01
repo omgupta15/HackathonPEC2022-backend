@@ -1,8 +1,6 @@
 module.exports = {
-  // GET
-  get: require("./get"),
   list: require("./list"),
-
-  // POST
+  get: require("./get"),
   apply: require("./apply"),
+  search: require("./search"),
 };

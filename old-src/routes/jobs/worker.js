@@ -7,9 +7,9 @@ const controller = require("controllers/jobs/worker");
 
 router.use(checkUserType("worker"));
 
-router.get("/:jobId/get", controller.get);
 router.get("/list", controller.list);
-
-router.post("/:jobId/apply", controller.apply);
+router.get("/:jobId/get", controller.get);
+router.post("/apply", controller.apply);
+router.post("/search", controller.search);
 
 module.exports = router;

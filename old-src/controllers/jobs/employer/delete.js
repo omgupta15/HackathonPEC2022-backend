@@ -1,11 +1,9 @@
-const mongoose = require("mongoose");
-
-// Models
-const Application = require("models/Application");
 const Job = require("models/Job");
+const mongoose = require("mongoose");
+const config = require("server-config");
 
 module.exports = async (req, res) => {
-  const { jobId } = req.params;
+  const { jobId } = req.body;
 
   if (!jobId)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
@@ -18,8 +16,9 @@ module.exports = async (req, res) => {
   if (!job)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
 
-  await Application.deleteMany({ job: mongoose.Types.ObjectId(jobId) });
   await Job.deleteOne({ _id: mongoose.Types.ObjectId(jobId) });
+
+  // TODO: Remove job from user.
 
   return res.json({ success: true });
 };

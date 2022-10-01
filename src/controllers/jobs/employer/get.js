@@ -1,7 +1,10 @@
 // Get details of a Job created by Employer and list all applied candidates.
 
-const Job = require("models/Job");
 const mongoose = require("mongoose");
+
+// Models
+const Application = require("models/Application");
+const Job = require("models/Job");
 
 module.exports = async (req, res) => {
   const { jobId } = req.params;
@@ -17,13 +20,17 @@ module.exports = async (req, res) => {
   if (!job)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
 
-  job.populate("appliedWorkers");
+  const appliedWorkers = await Application.find({
+    job: mongoose.Types.ObjectId(jobId),
+  }).populate("user");
 
   const jobDetails = {
+    jobId: job._id,
+
     jobTitle: job.jobTitle,
     description: job.description,
 
-    appliedWorkersCount: job.appliedWorkers.length,
+    appliedWorkersCount: job.appliedWorkersCount,
     totalWorkersRequired: job.totalWorkersRequired,
 
     location: job.location,
@@ -38,7 +45,7 @@ module.exports = async (req, res) => {
 
     workerTagRequired: job.workerTagRequired,
 
-    appliedWorkers: job.appliedWorkers.map((data) => ({
+    appliedWorkers: appliedWorkers.map((data) => ({
       name: data.worker.name,
       phoneNumber: data.worker.phoneNumber,
       workerTag: data.worker.workerTag,

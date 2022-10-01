@@ -1,5 +1,4 @@
-// Get a job with a specific Job Id.
-// TODO: Add check for workerTag match.
+// Get details of a Job created by Employer and list all applied candidates.
 
 const Job = require("models/Job");
 const mongoose = require("mongoose");
@@ -10,19 +9,17 @@ module.exports = async (req, res) => {
   if (!jobId)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
 
-  const job = await Job.findOne({ _id: mongoose.Types.ObjectId(jobId) });
+  const job = await Job.findOne({
+    _id: mongoose.Types.ObjectId(jobId),
+    employer: mongoose.Types.ObjectId(req.user._id),
+  });
 
   if (!job)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
 
-  const hasApplied = await Application.exists({
-    job: mongoose.Types.ObjectId(jobId),
-    worker: mongoose.Types.ObjectId(req.user._id),
-  });
+  job.populate("appliedWorkers");
 
   const jobDetails = {
-    jobId: job._id,
-
     jobTitle: job.jobTitle,
     description: job.description,
 
@@ -41,7 +38,12 @@ module.exports = async (req, res) => {
 
     workerTagRequired: job.workerTagRequired,
 
-    applied: hasApplied,
+    appliedWorkers: job.appliedWorkers.map((data) => ({
+      name: data.worker.name,
+      phoneNumber: data.worker.phoneNumber,
+      workerTag: data.worker.workerTag,
+      appliedAt: data.appliedAt,
+    })),
   };
   return res.json({ success: true, job: jobDetails });
 };

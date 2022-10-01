@@ -13,9 +13,9 @@ const schema = Joi.object({
   payPerHour: Joi.number().integer().min(1).required(),
   hoursPerDay: Joi.number().integer().min(1).max(24).required(),
 
-  openingExpiresOn: Joi.date().greater("now").required(),
+  // openingExpiresOn: Joi.date().greater("now").required(),
 
-  startsOn: Joi.date().greater(Joi.ref("openingExpiresOn")).required(),
+  startsOn: Joi.date().greater("now").required(),
   endsOn: Joi.date().greater(Joi.ref("startsOn")).required(),
 
   workerTagRequired: Joi.string()
@@ -24,7 +24,7 @@ const schema = Joi.object({
 });
 
 module.exports = async (req, res) => {
-  const { jobId, formData } = req.body;
+  const { jobId } = req.params;
 
   if (!jobId)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
@@ -36,6 +36,8 @@ module.exports = async (req, res) => {
 
   if (!job)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
+
+  const { formData } = req.body;
 
   let validationResponse;
   try {
@@ -62,24 +64,21 @@ module.exports = async (req, res) => {
 
   job.jobTitle = updatedData.jobTitle;
   job.description = updatedData.description;
-  job.totalWorkersRequired = updatedData.totalWorkersRequired;
+
+  if (updatedData.totalWorkersRequired >= job.totalWorkersRequired)
+    job.totalWorkersRequired = updatedData.totalWorkersRequired;
+
   job.location = updatedData.location;
-  job.payPerHour = updatedData.payPerHour;
-  job.hoursPerDay = updatedData.hoursPerDay;
-  job.openingExpiresOn = updatedData.openingExpiresOn;
+
+  if (updatedData.payPerHour >= job.payPerHour)
+    job.payPerHour = updatedData.payPerHour;
+  if (updatedData.hoursPerDay >= job.hoursPerDay)
+    job.hoursPerDay = updatedData.hoursPerDay;
+
+  // job.openingExpiresOn = updatedData.openingExpiresOn;
   job.startsOn = updatedData.startsOn;
   job.endsOn = updatedData.endsOn;
   job.workerTagRequired = updatedData.workerTagRequired;
-
-  if (job.appliedWorkers.length >= job.totalWorkersRequired) {
-    // const workersToRemove = job.appliedWorkers.slice(job.totalWorkersRequired);
-
-    // workersToRemove.populate();
-    // for (let worker of workersToRemove) {
-    // }
-
-    job.appliedWorkers = job.appliedWorkers.slice(0, job.totalWorkersRequired);
-  }
 
   await job.save();
 

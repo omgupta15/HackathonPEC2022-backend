@@ -13,6 +13,19 @@ const userSchema = new mongoose.Schema(
 
     // Workers
     workerTag: { type: String, enum: ["", ...config.WORKER_TAGS], default: "" },
+    jobsApplied: [
+      {
+        job: { type: mongoose.Schema.Types.ObjectId, ref: "Job" },
+        appliedAt: Date,
+      },
+    ],
+    acceptedJobs: [
+      {
+        job: { type: mongoose.Schema.Types.ObjectId, ref: "Job" },
+        appliedAt: Date,
+        acceptedAt: Date,
+      },
+    ],
 
     // Employers
     jobsPosted: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],

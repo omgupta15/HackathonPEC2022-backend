@@ -7,7 +7,6 @@ const jobSchema = new mongoose.Schema(
     jobTitle: { type: String, required: true },
     description: { type: String, required: true },
 
-    appliedWorkersCount: { type: Number, default: 0, required: true },
     totalWorkersRequired: { type: Number, required: true },
 
     location: { type: String, required: true },
@@ -27,6 +26,8 @@ const jobSchema = new mongoose.Schema(
       enum: config.WORKER_TAGS,
       required: true,
     },
+
+    appliedWorkers: [{ type: mongoose.Types.ObjectId, ref: "Application" }],
 
     // comments: [Comment], // recursive comments
   },

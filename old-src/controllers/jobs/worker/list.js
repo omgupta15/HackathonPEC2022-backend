@@ -1,37 +1,26 @@
-// Get List of Jobs created by Employer
+// Get List of suitable jobs for the workerTag
 
 const Job = require("models/Job");
-const mongoose = require("mongoose");
 
 module.exports = async (req, res) => {
   const jobs = await Job.find({
-    employer: mongoose.Types.ObjectId(req.user._id),
+    workerTagRequired: req.user.workerTag,
   });
 
   const jobsList = [];
   for (let job of jobs) {
     jobsList.push({
-      jobId: job._id,
-
       jobTitle: job.jobTitle,
-      description: job.description,
-
-      appliedWorkersCount: job.appliedWorkersCount,
-      totalWorkersRequired: job.totalWorkersRequired,
 
       location: job.location,
 
       payPerHour: job.payPerHour,
       hoursPerDay: job.hoursPerDay,
 
-      openingExpiresOn: job.openingExpiresOn,
+      workerTagRequired: job.workerTagRequired,
 
       startsOn: job.startsOn,
       endsOn: job.endsOn,
-
-      workerTagRequired: job.workerTagRequired,
-
-      appliedWorkers: [],
     });
   }
 

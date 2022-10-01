@@ -1,14 +1,11 @@
 // Apply for a job with a specific Job Id.
 // TODO: Add check for workerTag match & make sure user hasn't applied for it already.
 
+const Job = require("models/Job");
 const mongoose = require("mongoose");
 
-// Models
-const Application = require("models/Application");
-const Job = require("models/Job");
-
 module.exports = async (req, res) => {
-  const { jobId } = req.params;
+  const { jobId } = req.body;
 
   if (!jobId)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
@@ -18,33 +15,31 @@ module.exports = async (req, res) => {
   if (!job)
     return res.status(404).json({ success: false, error: "invalid-job-id" });
 
-  const hasAppliedAlready = await Application.exists({
+  const hasAppliedAlready = req.user.jobsApplied.exists({
     job: mongoose.Types.ObjectId(jobId),
-    worker: mongoose.Types.ObjectId(req.user._id),
   });
   if (hasAppliedAlready)
     return res.status(400).json({ success: false, error: "already-applied" });
 
-  if (job.appliedWorkersCount >= job.totalWorkersRequired)
+  if (job.appliedWorkers.length >= job.totalWorkersRequired)
     return res.status(400).json({ success: false, error: "job-already-full" });
 
-  const application = new Application({
-    job: job._id,
-    worker: req.user._id,
+  const applicationTime = new Date();
 
-    appliedAt: new Date(),
-    accepted: false,
+  req.user.jobsApplied.push({
+    job,
+    appliedAt: applicationTime,
   });
-  await application.save();
+  await req.user.save();
 
-  job.appliedWorkersCount++;
+  job.appliedWorkers.push({
+    worker: req.user,
+    appliedAt: applicationTime,
+  });
   await job.save();
 
-  if (job.appliedWorkersCount >= job.totalWorkersRequired) {
-    await Application.updateMany(
-      { job: job._id },
-      { $set: { accepted: true } }
-    );
+  if (job.appliedWorkers.length >= job.totalWorkersRequired) {
+    // Job Full. Mark as accepted.
   }
 
   return res.json({ success: true });

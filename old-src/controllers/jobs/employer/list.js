@@ -10,28 +10,20 @@ module.exports = async (req, res) => {
 
   const jobsList = [];
   for (let job of jobs) {
+    if (job.totalWorkersRequired <= job.appliedWorkers.length) continue;
+
     jobsList.push({
-      jobId: job._id,
-
       jobTitle: job.jobTitle,
-      description: job.description,
-
-      appliedWorkersCount: job.appliedWorkersCount,
-      totalWorkersRequired: job.totalWorkersRequired,
 
       location: job.location,
 
       payPerHour: job.payPerHour,
       hoursPerDay: job.hoursPerDay,
 
-      openingExpiresOn: job.openingExpiresOn,
+      workerTagRequired: job.workerTagRequired,
 
       startsOn: job.startsOn,
       endsOn: job.endsOn,
-
-      workerTagRequired: job.workerTagRequired,
-
-      appliedWorkers: [],
     });
   }
 
