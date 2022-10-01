@@ -24,7 +24,7 @@ const schema = Joi.object({
 });
 
 module.exports = async (req, res) => {
-  const { formData } = req.body;
+  const formData = req.body;
 
   let validationResponse;
   try {
